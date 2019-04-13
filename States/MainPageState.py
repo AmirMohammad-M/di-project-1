@@ -2,8 +2,9 @@ from BaseState import BaseState
 
 
 class MainPageState(BaseState):
-    def __init__(self, id):
-        self.userId = id
+    def __init__(self, r, userId):
+        self.userId = userId
+        self.r = r
 
     def process(self):
         # fetch list of chats
@@ -15,15 +16,15 @@ class MainPageState(BaseState):
         selection = input('Enter command:')
 
         if selection == 'create chat':
-            return CreateChatState()
+            return CreateChatState(r)
         elif selection == 'create group':
-            return CreateGroupState()
+            return CreateGroupState(r)
         elif selection == 'contacts':
-            return ContactsListState()
+            return ContactsListState(r)
         elif selection.startswith('show'):
             cmd = selection.split(' ')
             idx = int(cmd[2])
             if cmd[1] == 'group':
-                return
+                return ShowChatState(r)
             elif cmd[1] == 'chat':
-                return
+                return ShowGroupState(r)
