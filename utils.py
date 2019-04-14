@@ -1,8 +1,13 @@
 def selectContact(userId, r):
-    # fetch user's contacts
+    contacts = r.get(userId+':contacts')
 
-    # print list of contacts
+    for c in contacts:
+        print(c)
 
     selection = input('Enter contact idx:')
+    return contacts[selection]
 
-    # return selected contact
+
+def printChatsList(chats):
+    for c in chats:
+        print(c)

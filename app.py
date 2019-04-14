@@ -1,10 +1,8 @@
 import redis
-from InitState import InitState
+from States.InitState import InitState
 
 r = redis.Redis(host='redis', port=6379, password='')
 
-
-r.set('Hello', 'Kiwi')
 
 currentState = InitState(r)
 

@@ -1,4 +1,5 @@
-from BaseState import BaseState
+from States.BaseState import BaseState
+from utils import printChatsList
 
 
 class MainPageState(BaseState):
@@ -7,12 +8,17 @@ class MainPageState(BaseState):
         self.r = r
 
     def process(self):
-        # fetch list of chats
+        chatids = self.r.zrevrange(self.userId+':chatslist', 0, 10)
+        # chats = list(map(lambda id: self.r.chatids))
+        # printChatsList(chats)
 
+        if not chatids:
+            print('Your chats list is empty.')
+            print('\n')
         print(':create chat: to start a new chat')
         print(':create group: to make a new group')
         print(':contacts: contacts list')
-        print(':show chat/group ##: view messages of the specified ##')
+        print(':open ##: view messages of the specified ##')
         selection = input('Enter command:')
 
         if selection == 'create chat':
@@ -21,10 +27,14 @@ class MainPageState(BaseState):
             return CreateGroupState(r)
         elif selection == 'contacts':
             return ContactsListState(r)
-        elif selection.startswith('show'):
+        elif selection.startswith('open'):
             cmd = selection.split(' ')
-            idx = int(cmd[2])
+            idx = int(cmd[1])
             if cmd[1] == 'group':
                 return ShowChatState(r)
             elif cmd[1] == 'chat':
                 return ShowGroupState(r)
+
+
+def resolveChatId(id, r):
+    chat = r.get(id)
