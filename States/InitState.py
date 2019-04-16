@@ -8,11 +8,11 @@ class InitState(BaseState):
 
     def process(self):
         phone = str(input('Hello. Please enter your phone number:'))
-        name = self.r.hget(phone, 'name')
+        name = self.r.hget(phone, 'name').decode('ascii')
         if not name:
-            name = str(input('Your name:'))
+            name = input('Your name:')
             self.r.hset(phone, 'name', name)
 
-        print('Welcome ' + str(name))
+        print('Welcome ' + name)
 
         return MainPageState(self.r, phone)
