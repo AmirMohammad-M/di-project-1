@@ -27,8 +27,8 @@ class MainPageState(BaseState):
                     name = self.r.hget(name, 'name').decode('ascii')
                 else:
                     name = 'G\t' + self.r.hget(id, 'name').decode('ascii')
-                chatLastSeen = int(self.r.get(
-                    self.userId+':'+id+':lastSeen').decode('ascii'))
+                t = self.r.get(self.userId+':'+id+':lastSeen')
+                chatLastSeen = int(t.decode('ascii') if t else '0')
                 unreadCount = str(self.r.zcount(
                     id+':messages', chatLastSeen, time.time()*1000))
                 print(i + 1, name, (unreadCount +

@@ -26,5 +26,6 @@ class CreateChatState(BaseState):
         self.r.zadd(contactsChatlistKey, {newChatId: 0})
         self.r.hset(newChatId, 'lastSeenByOthers', int(time.time() * 1000))
         self.r.set(self.userId+':'+newChatId+':lastSeen', 0)
+        # self.r.set(self.userId+':'+newChatId+':lastSeen', 0)
         print('Chat Created')
         return ShowChatState(self.r, self.userId, newChatId)
