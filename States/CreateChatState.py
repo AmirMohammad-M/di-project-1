@@ -18,11 +18,13 @@ class CreateChatState(BaseState):
 
         chatslistKey = self.userId + ':chatslist'
         contactsChatlistKey = contact + ':chatslist'
-
         newChatId = 'PV:' + (
             (self.userId + ':' + contact) if int(self.userId) < int(contact) else (contact + ':' + self.userId))
+
         self.r.zadd(chatslistKey, {newChatId: int(time.time() * 1000)})
-        self.r.zadd(contactsChatlistKey, {newChatId: 0})  # TODO Bug Or Feature?
+        # TODO Bug Or Feature?
+        self.r.zadd(contactsChatlistKey, {newChatId: 0})
         self.r.hset(newChatId, 'lastSeenByOthers', int(time.time() * 1000))
+        self.r.set(self.userId+':'+newChatId+':lastSeen', 0)
         print('Chat Created')
         return ShowChatState(self.r, self.userId, newChatId)

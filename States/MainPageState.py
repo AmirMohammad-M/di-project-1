@@ -4,9 +4,7 @@ from States.CreateGroupState import CreateGroupState
 from States.ShowChatState import ShowChatState
 from States.ShowContactsState import ShowContactsState
 from States.ShowGroupState import ShowGroupState
-
-
-# from utils import printChatsList
+import time
 
 
 class MainPageState(BaseState):
@@ -26,10 +24,15 @@ class MainPageState(BaseState):
                 if id.startswith('PV'):
                     splitted = id.split(':')
                     name = splitted[2] if splitted[1] == self.userId else splitted[1]
-                #     TODO resolve name of phone number
+                    name = self.r.hget(name, 'name').decode('ascii')
                 else:
                     name = 'G\t' + self.r.hget(id, 'name').decode('ascii')
-                print(i + 1, name)  # TODO Unread messages count
+                chatLastSeen = int(self.r.get(
+                    self.userId+':'+id+':lastSeen').decode('ascii'))
+                unreadCount = str(self.r.zcount(
+                    id+':messages', chatLastSeen, time.time()*1000))
+                print(i + 1, name, (unreadCount +
+                                    ' New') if not unreadCount == '0' else '')
 
         print('\n\n:create chat: to start a new chat')
         print(':create group: to make a new group')
